@@ -28,10 +28,7 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
-app.use("/places", placesRoutes);
-app.use("/users", usersRoutes);
-
-app.use(notFoundErrorHandler);
-app.use(generalErrorHandler);
+app.use("/places");
+app.use("/users");
 
 module.exports = { app, initializeServer };
