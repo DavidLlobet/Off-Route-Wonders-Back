@@ -1,5 +1,6 @@
+const { expect } = require("@jest/globals");
 const Place = require("../../database/models/place");
-const { getAllPlaces } = require("./placesControllers");
+const { getAllPlaces, getPlaceById } = require("./placesControllers");
 
 jest.mock("../../database/models/place");
 
@@ -33,7 +34,7 @@ const placesArray = [
   },
 ];
 
-describe("Given a getAllPlaces controller", () => {
+describe("Given a getAllPlaces function", () => {
   describe("When it is called", () => {
     test("Then it should respond with the method json", async () => {
       const res = mockResponse();
@@ -67,6 +68,40 @@ describe("Given a getAllPlaces controller", () => {
       await getAllPlaces(null, res, next);
 
       expect(Place.find).toHaveBeenCalled();
+    });
+  });
+});
+
+describe("Given a getPlaceById function", () => {
+  describe("When it receives a request with an id, a response and the database contains places", () => {
+    test("Then it should return a place with the method json", async () => {
+      const res = mockResponse();
+      const places = placesArray;
+      const idSearched = "6185993022dd92661d3cfca6";
+      const placeSearched = places.find((place) => place.id === idSearched);
+      const req = { params: { id: idSearched } };
+      Place.findById = jest.fn().mockResolvedValue(placeSearched);
+
+      await getPlaceById(req, res, null);
+
+      expect(Place.findById).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(placeSearched);
+    });
+  });
+  describe("When it receives a request with an id that doesn't match any place in the database", () => {
+    test("Then it should call next with an error message 'Place not found' and a status code 404", async () => {
+      const res = mockResponse();
+      const idSearched = "6185993022dd92661d3cfg";
+      const req = { params: { id: idSearched } };
+      const error = new Error("Place not found");
+      error.code = 404;
+      const next = jest.fn();
+      Place.findById = jest.fn().mockResolvedValue();
+
+      await getPlaceById(req, res, next);
+
+      expect(Place.findById).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });
