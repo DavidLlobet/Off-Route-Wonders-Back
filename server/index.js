@@ -6,7 +6,7 @@ const express = require("express");
 const {
   notFoundErrorHandler,
   generalErrorHandler,
-} = require("./middlewares/error");
+} = require("./middlewares/errors");
 
 const app = express();
 
