@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const debug = require("debug")("places:server");
 const express = require("express");
+const { notFoundErrorHandler, generalErrorHandler } = require("./error");
 
 const app = express();
 
@@ -30,5 +31,8 @@ app.use(express.json());
 
 app.use("/places");
 app.use("/users");
+
+app.use(notFoundErrorHandler);
+app.use(generalErrorHandler);
 
 module.exports = { app, initializeServer };
