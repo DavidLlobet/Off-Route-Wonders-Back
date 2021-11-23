@@ -54,4 +54,19 @@ describe("Given a getAllPlaces controller", () => {
       expect(Place.find).toHaveBeenCalled();
     });
   });
+  describe("When it is called and the database connection is not working", () => {
+    test("Then it should invoke next with an error message 'Cannot find the places' and a status code 400", async () => {
+      const res = mockResponse();
+      const next = jest.fn();
+      const error = new Error();
+      error.code = 400;
+      error.message = "Cannot find the places";
+
+      Place.find = jest.fn().mockRejectedValue(new Error());
+
+      await getAllPlaces(null, res, next);
+
+      expect(Place.find).toHaveBeenCalled();
+    });
+  });
 });

@@ -1,13 +1,14 @@
 const debug = require("debug")("places:database");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const connectDB = () =>
   new Promise((resolve, reject) => {
     mongoose.set("debug", true);
     mongoose.set("toJSON", {
       virtuals: true,
-      transform: (ret) => {
+      transform: (doc, ret) => {
         // eslint-disable-next-line no-underscore-dangle
         delete ret._id;
         // eslint-disable-next-line no-underscore-dangle
@@ -22,6 +23,7 @@ const connectDB = () =>
         return;
       }
       debug(chalk.green("Conectado a la base de datos"));
+
       resolve();
     });
     mongoose.connection.on("close", () => {

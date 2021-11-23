@@ -32,8 +32,8 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
-app.use("/places");
-app.use("/users");
+app.get("/places", (req, res, next) => {});
+app.use("/users", (req, res, next) => {});
 
 app.use(notFoundErrorHandler);
 app.use(generalErrorHandler);
