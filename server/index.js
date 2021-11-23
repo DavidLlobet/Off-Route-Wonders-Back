@@ -3,7 +3,10 @@ const morgan = require("morgan");
 const cors = require("cors");
 const debug = require("debug")("places:server");
 const express = require("express");
-const { notFoundErrorHandler, generalErrorHandler } = require("./error");
+const {
+  notFoundErrorHandler,
+  generalErrorHandler,
+} = require("./middlewares/error");
 
 const app = express();
 
