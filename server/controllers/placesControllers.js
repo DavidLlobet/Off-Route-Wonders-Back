@@ -1,8 +1,14 @@
-const Place = require("../database/models/place");
+const Place = require("../../database/models/place");
 
-const getAllPlaces = async (req, res) => {
-  const places = await Place.find();
-  res.json(places);
+const getAllPlaces = async (req, res, next) => {
+  try {
+    const places = await Place.find();
+    res.json(places);
+  } catch (error) {
+    error.code = 400;
+    error.message = "Cannot find the wonders";
+    next(error);
+  }
 };
 
 const getPlacesByCountry = async (req, res, next) => {

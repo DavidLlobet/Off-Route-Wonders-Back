@@ -32,7 +32,7 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
-app.use("/places");
+app.get("/places");
 app.use("/users");
 
 app.use(notFoundErrorHandler);
