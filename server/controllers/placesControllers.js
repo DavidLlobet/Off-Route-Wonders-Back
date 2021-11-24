@@ -66,7 +66,7 @@ const updatePlaceById = async (req, res, next) => {
     res.json(placeUpdated);
   } catch (error) {
     error.code = 400;
-    error.message = "Cannot update the wonder";
+    error.message = "Cannot update the place";
     next(error);
   }
 };

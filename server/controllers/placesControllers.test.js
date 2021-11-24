@@ -3,6 +3,7 @@ const {
   getAllPlaces,
   getPlaceById,
   createPlace,
+  updatePlaceById,
 } = require("./placesControllers");
 
 jest.mock("../../database/models/place");
@@ -117,9 +118,9 @@ describe("Given a createPlace function", () => {
         id: "6185993022dd92661d3cf5yl",
         title: "place3",
         date: "24-11-2021",
-        country: "Kirguistan",
+        country: "Angola",
         images: ["image1", "image2"],
-        text: "Kirguistan es la repera",
+        text: "Esa Angola como mola, se merece una ola",
         map: 2154410,
         comments: "",
       };
@@ -145,6 +146,30 @@ describe("Given a createPlace function", () => {
       await createPlace(req, null, next);
 
       expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+});
+
+describe("Given an updatePlace function", () => {
+  describe("When it receives a request with a body containing a modified existing place", () => {
+    test("Then it should return the modified place with the method json", async () => {
+      const res = mockResponse();
+      const place = {
+        id: "6185993022dd92661d3cf5yd",
+        title: "place2",
+        date: "23-11-2021",
+        country: "Eslovaquia",
+        images: ["image1", "image2", "image3"],
+        text: "Eslovaquia mola mogollón",
+        map: 2154456,
+        comments: "",
+      };
+      const req = { body: place, params: { id: place.id } };
+      Place.findByIdAndUpdate = jest.fn().mockResolvedValue(place);
+
+      await updatePlaceById(req, res, null);
+
+      expect(res.json).toHaveBeenCalledWith(place);
     });
   });
 });
