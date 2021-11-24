@@ -189,7 +189,7 @@ describe("Given a createPlace function", () => {
 });
 
 describe("Given an updatePlace function", () => {
-  describe("When it receives a request with a body containing a modified existing place", () => {
+  describe("When it receives a request with an id and a body containing a modified existing place", () => {
     test("Then it should return the modified place with the method json", async () => {
       const res = mockResponse();
       const place = {
@@ -208,6 +208,20 @@ describe("Given an updatePlace function", () => {
       await updatePlaceById(req, res, null);
 
       expect(res.json).toHaveBeenCalledWith(place);
+    });
+  });
+  describe("When it receives a request with a body containing an id but the db connection is not working", () => {
+    test("Then it should call next with an error message 'Cannot update the place' and a status code 400", async () => {
+      const idSearched = "6185993022dd92661d3cfg";
+      const req = { params: { id: idSearched } };
+      const error = new Error("Cannot update the place");
+      error.code = 400;
+      const next = jest.fn();
+      Place.findByIdAndUpdate = jest.fn().mockRejectedValue(new Error());
+
+      await updatePlaceById(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });
