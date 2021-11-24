@@ -29,18 +29,19 @@ const getPlacesByCountry = async (req, res, next) => {
 };
 
 const getPlaceById = async (req, res, next) => {
-  const { idPlace } = req.params;
+  const { id } = req.params;
   try {
-    const searchedPlace = await Place.findById(idPlace);
-    if (searchedPlace) {
-      res.json(searchedPlace);
+    const place = await Place.findById(id);
+    if (place) {
+      res.json(place);
     } else {
-      const error = new Error("Wonder not found");
+      const error = new Error("Place not found");
       error.code = 404;
       next(error);
     }
   } catch (error) {
     error.code = 400;
+    error.message = "Cannot find the place";
     next(error);
   }
 };
