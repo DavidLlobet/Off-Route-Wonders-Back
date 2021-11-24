@@ -64,7 +64,13 @@ const updatePlaceById = async (req, res, next) => {
     const placeUpdated = await Place.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    res.json(placeUpdated);
+    if (placeUpdated) {
+      res.json(placeUpdated);
+    } else {
+      const error = new Error("Place to modify not found");
+      error.code = 404;
+      next(error);
+    }
   } catch (error) {
     error.code = 400;
     error.message = "Cannot update the place";
