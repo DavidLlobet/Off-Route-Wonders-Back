@@ -1,4 +1,3 @@
-const { expect } = require("@jest/globals");
 const Place = require("../../database/models/place");
 const { getAllPlaces, getPlaceById } = require("./placesControllers");
 
