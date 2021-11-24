@@ -1,5 +1,9 @@
 const Place = require("../../database/models/place");
-const { getAllPlaces, getPlaceById } = require("./placesControllers");
+const {
+  getAllPlaces,
+  getPlaceById,
+  createPlace,
+} = require("./placesControllers");
 
 jest.mock("../../database/models/place");
 
@@ -100,6 +104,46 @@ describe("Given a getPlaceById function", () => {
       await getPlaceById(req, res, next);
 
       expect(Place.findById).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+});
+
+describe("Given a createPlace function", () => {
+  describe("When it receives a request with a body that contains a new place", () => {
+    test("Then it should return the new place with the method json", async () => {
+      const res = mockResponse();
+      const place = {
+        id: "6185993022dd92661d3cf5yl",
+        title: "place3",
+        date: "24-11-2021",
+        country: "Kirguistan",
+        images: ["image1", "image2"],
+        text: "Kirguistan es la repera",
+        map: 2154410,
+        comments: "",
+      };
+      const req = { body: place };
+      Place.create = jest.fn().mockResolvedValue(place);
+
+      await createPlace(req, res, null);
+
+      expect(Place.create).toHaveBeenCalledWith(place);
+      expect(res.json).toHaveBeenCalledWith(place);
+    });
+  });
+  describe("When it receives a request with a body containing anything but the db connection is not working", () => {
+    test("Then it should call next with an error message 'Cannot create the place' and a status code 400", async () => {
+      const req = { body: "anything" };
+      const error = new Error();
+      error.code = 400;
+      error.message = "Cannot create the place";
+
+      const next = jest.fn();
+      Place.create = jest.fn().mockRejectedValue(new Error());
+
+      await createPlace(req, null, next);
+
       expect(next).toHaveBeenCalledWith(error);
     });
   });

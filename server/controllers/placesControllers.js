@@ -52,7 +52,7 @@ const createPlace = async (req, res, next) => {
     res.json(placeCreated);
   } catch (error) {
     error.code = 400;
-    error.message = "Cannot create the wonder";
+    error.message = "Cannot create the place";
     next(error);
   }
 };
