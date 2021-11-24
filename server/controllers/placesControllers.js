@@ -78,12 +78,12 @@ const deletePlaceById = async (req, res, next) => {
     if (deletedPlace) {
       res.json(deletedPlace);
     } else {
-      const error = new Error("Wonder to delete not found");
+      const error = new Error("Place to delete not found");
       error.code = 404;
       next(error);
     }
   } catch (error) {
-    error.message = "Cannot delete Wonder";
+    error.message = "Cannot delete the place";
     error.code = 400;
     next(error);
   }

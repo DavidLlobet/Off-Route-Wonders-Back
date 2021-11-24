@@ -5,6 +5,7 @@ const {
   createPlace,
   updatePlaceById,
   getPlacesByCountry,
+  deletePlaceById,
 } = require("./placesControllers");
 
 jest.mock("../../database/models/place");
@@ -207,6 +208,54 @@ describe("Given an updatePlace function", () => {
       await updatePlaceById(req, res, null);
 
       expect(res.json).toHaveBeenCalledWith(place);
+    });
+  });
+});
+
+describe("Given a deletePlaceById function", () => {
+  describe("When it receives a request with an id, a response and the database contains a place with that id", () => {
+    test("Then it should return the deleted place with the method json", async () => {
+      const res = mockResponse();
+      const places = placesArray;
+      const idSearched = "6185993022dd92661d3cfca6";
+      const placeSearched = places.find((place) => place.id === idSearched);
+      const req = { params: { id: idSearched } };
+      Place.findByIdAndDelete = jest.fn().mockResolvedValue(placeSearched);
+
+      await deletePlaceById(req, res, null);
+
+      expect(Place.findByIdAndDelete).toHaveBeenCalledWith(placeSearched.id);
+      expect(res.json).toHaveBeenCalledWith(placeSearched);
+    });
+  });
+  describe("When it receives a request with an id that doesn't match any place in the database", () => {
+    test("Then it should call next with an error message 'Place to delete not found' and a status code 404", async () => {
+      const res = mockResponse();
+      const idSearched = "6185993022dd92661d3cfg";
+      const req = { params: { id: idSearched } };
+      const error = new Error("Place to delete not found");
+      error.code = 404;
+      const next = jest.fn();
+      Place.findByIdAndDelete = jest.fn().mockResolvedValue();
+
+      await deletePlaceById(req, res, next);
+
+      expect(Place.findByIdAndDelete).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+  describe("When it receives a request with a body containing an id but the db connection is not working", () => {
+    test("Then it should call next with an error message 'Cannot delete the place' and a status code 400", async () => {
+      const idSearched = "6185993022dd92661d3cfg";
+      const req = { params: { id: idSearched } };
+      const error = new Error("Cannot delete the place");
+      error.code = 400;
+      const next = jest.fn();
+      Place.findByIdAndDelete = jest.fn().mockRejectedValue(new Error());
+
+      await deletePlaceById(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });
