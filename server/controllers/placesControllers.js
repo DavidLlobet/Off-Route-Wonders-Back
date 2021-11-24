@@ -24,6 +24,7 @@ const getPlacesByCountry = async (req, res, next) => {
     }
   } catch (error) {
     error.code = 400;
+    error.message = "Cannot find the country";
     next(error);
   }
 };
@@ -52,7 +53,7 @@ const createPlace = async (req, res, next) => {
     res.json(placeCreated);
   } catch (error) {
     error.code = 400;
-    error.message = "Cannot create the wonder";
+    error.message = "Cannot create the place";
     next(error);
   }
 };
@@ -66,7 +67,7 @@ const updatePlaceById = async (req, res, next) => {
     res.json(placeUpdated);
   } catch (error) {
     error.code = 400;
-    error.message = "Cannot update the wonder";
+    error.message = "Cannot update the place";
     next(error);
   }
 };
@@ -78,12 +79,12 @@ const deletePlaceById = async (req, res, next) => {
     if (deletedPlace) {
       res.json(deletedPlace);
     } else {
-      const error = new Error("Wonder to delete not found");
+      const error = new Error("Place to delete not found");
       error.code = 404;
       next(error);
     }
   } catch (error) {
-    error.message = "Cannot delete Wonder";
+    error.message = "Cannot delete the place";
     error.code = 400;
     next(error);
   }
