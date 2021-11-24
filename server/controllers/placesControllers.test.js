@@ -110,6 +110,20 @@ describe("Given a getPlaceById function", () => {
       expect(next).toHaveBeenCalledWith(error);
     });
   });
+  describe("When it receives a request with an id but the db connection is not working", () => {
+    test("Then it should call next with an error message 'Cannot find the place' and a status code 400", async () => {
+      const idSearched = "6185993022dd92661d3cfg";
+      const req = { params: { id: idSearched } };
+      const error = new Error("Cannot find the place");
+      error.code = 400;
+      const next = jest.fn();
+      Place.findById = jest.fn().mockRejectedValue(new Error());
+
+      await getPlaceById(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+    });
+  });
 });
 
 describe("Given a getPlacesByCountry function", () => {
@@ -143,6 +157,20 @@ describe("Given a getPlacesByCountry function", () => {
       await getPlacesByCountry(req, res, next);
 
       expect(Place.findOne).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+  describe("When it receives a request with a body containing a country but the db connection is not working", () => {
+    test("Then it should call next with an error message 'Cannot find the country' and a status code 400", async () => {
+      const countrySearched = "Egipto";
+      const req = { params: { country: countrySearched } };
+      const error = new Error("Cannot find the country");
+      error.code = 400;
+      const next = jest.fn();
+      Place.findOne = jest.fn().mockRejectedValue(new Error());
+
+      await getPlacesByCountry(req, null, next);
+
       expect(next).toHaveBeenCalledWith(error);
     });
   });

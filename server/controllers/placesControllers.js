@@ -24,6 +24,7 @@ const getPlacesByCountry = async (req, res, next) => {
     }
   } catch (error) {
     error.code = 400;
+    error.message = "Cannot find the country";
     next(error);
   }
 };
