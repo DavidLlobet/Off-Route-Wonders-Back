@@ -238,6 +238,22 @@ describe("Given an updatePlace function", () => {
       expect(res.json).toHaveBeenCalledWith(place);
     });
   });
+  describe("When it receives a request with an id that doesn't match any place in the database", () => {
+    test("Then it should call next with an error message 'Place to modify not found' and a status code 404", async () => {
+      const res = mockResponse();
+      const idSearched = "6185993022dd92661d3cfg";
+      const req = { params: { id: idSearched } };
+      const error = new Error("Place to modify not found");
+      error.code = 404;
+      const next = jest.fn();
+      Place.findByIdAndUpdate = jest.fn().mockResolvedValue();
+
+      await updatePlaceById(req, res, next);
+
+      expect(Place.findByIdAndUpdate).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(error);
+    });
+  });
   describe("When it receives a request with a body containing an id but the db connection is not working", () => {
     test("Then it should call next with an error message 'Cannot update the place' and a status code 400", async () => {
       const idSearched = "6185993022dd92661d3cfg";
