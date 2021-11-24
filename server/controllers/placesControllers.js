@@ -6,7 +6,7 @@ const getAllPlaces = async (req, res, next) => {
     res.json(places);
   } catch (error) {
     error.code = 400;
-    error.message = "Cannot find the wonders";
+    error.message = "Cannot find the places";
     next(error);
   }
 };
@@ -14,7 +14,7 @@ const getAllPlaces = async (req, res, next) => {
 const getPlacesByCountry = async (req, res, next) => {
   const { country } = req.params;
   try {
-    const searchedCountry = await Place.findOne(country);
+    const searchedCountry = await Place.find({ Query: country });
     if (searchedCountry) {
       res.json(searchedCountry);
     } else {

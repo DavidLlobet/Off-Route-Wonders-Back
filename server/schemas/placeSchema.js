@@ -16,4 +16,4 @@ const placeValidation = {
   }),
 };
 
-module.exports = placeValidation;
+module.exports = { placeValidation };

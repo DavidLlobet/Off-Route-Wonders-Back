@@ -136,11 +136,11 @@ describe("Given a getPlacesByCountry function", () => {
         (place) => place.country === countrySearched
       );
       const req = { params: { country: countrySearched } };
-      Place.findOne = jest.fn().mockResolvedValue(placeSearched);
+      Place.find = jest.fn().mockResolvedValue(placeSearched);
 
       await getPlacesByCountry(req, res, null);
 
-      expect(Place.findOne).toHaveBeenCalled();
+      expect(Place.find).toHaveBeenCalled();
       expect(res.json).toHaveBeenCalledWith(placeSearched);
     });
   });
@@ -152,11 +152,11 @@ describe("Given a getPlacesByCountry function", () => {
       const error = new Error("Country not found");
       error.code = 404;
       const next = jest.fn();
-      Place.findOne = jest.fn().mockResolvedValue();
+      Place.find = jest.fn().mockResolvedValue();
 
       await getPlacesByCountry(req, res, next);
 
-      expect(Place.findOne).toHaveBeenCalled();
+      expect(Place.find).toHaveBeenCalled();
       expect(next).toHaveBeenCalledWith(error);
     });
   });
@@ -167,7 +167,7 @@ describe("Given a getPlacesByCountry function", () => {
       const error = new Error("Cannot find the country");
       error.code = 400;
       const next = jest.fn();
-      Place.findOne = jest.fn().mockRejectedValue(new Error());
+      Place.find = jest.fn().mockRejectedValue(new Error());
 
       await getPlacesByCountry(req, null, next);
 
