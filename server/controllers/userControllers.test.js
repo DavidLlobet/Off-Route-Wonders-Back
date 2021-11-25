@@ -93,3 +93,45 @@ describe("Given a userLogin function", () => {
     });
   });
 });
+
+describe("Given a userSignUp function", () => {
+  describe("When it receives a request with an existing username", () => {
+    test("Then it should invoke a next function with an error message 'Username already taken' and a status code 400", async () => {
+      const usernameTest = "Mario";
+      const req = {
+        body: {
+          username: usernameTest,
+        },
+      };
+      const res = {};
+      User.findOne = jest.fn().mockResolvedValue(true);
+      const error = new Error("Username already taken");
+      error.code = 400;
+      const next = jest.fn();
+
+      await userSignUp(req, res, next);
+
+      expect(User.findOne).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(error);
+      expect(next.mock.calls[0][0]).toHaveProperty("code", error.code);
+    });
+  });
+  describe("When it receives a request with a new username", () => {
+    test("Then it should respond with a 200 status", async () => {
+      const userTest = {
+        username: "Mario",
+        password: "Ahí e'tá er tío",
+      };
+      const req = {
+        body: userTest,
+      };
+      const res = mockResponse();
+      User.findOne = jest.fn().mockResolvedValue(false);
+
+      await userSignUp(req, res);
+
+      expect(res.json).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+  });
+});
