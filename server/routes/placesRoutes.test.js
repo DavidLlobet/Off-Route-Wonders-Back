@@ -27,6 +27,7 @@ afterAll((done) => {
 beforeEach(async () => {
   newPlace1 = await Place.create({
     id: "6185993022dd92661d3cfca6",
+    author: "619fd3c298bdb970bc0c248b",
     title: "place1",
     date: 23 - 11 - 2021,
     country: "Vietnam",
@@ -37,6 +38,7 @@ beforeEach(async () => {
   });
   newPlace2 = await Place.create({
     id: "6185993022dd92661d3cf5yd",
+    author: "619fd3c298bdb970bc0c248b",
     title: "place2",
     date: 23 - 11 - 2021,
     country: "Eslovaquia",
@@ -87,6 +89,7 @@ describe("Given a /places/create route", () => {
     test("Then it should respond with the created place", async () => {
       const newPlace = {
         id: "6185993022dd92661d3cf5yj",
+        author: "619fd3c298bdb970bc0c248b",
         title: "place3",
         date: 23 - 11 - 2021,
         country: "Canadá",

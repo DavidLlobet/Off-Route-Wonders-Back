@@ -29,6 +29,19 @@ const getPlacesByCountry = async (req, res, next) => {
   }
 };
 
+const getPlacesByAuthor = async (req, res, next) => {
+  try {
+    const searchedPlaces = await Place.find({ author: req.userId }).populate({
+      path: "author",
+    });
+    res.json(searchedPlaces);
+  } catch (error) {
+    error.code = 400;
+    error.message = "Cannot find the places";
+    next(error);
+  }
+};
+
 const getPlaceById = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -99,6 +112,7 @@ const deletePlaceById = async (req, res, next) => {
 module.exports = {
   getAllPlaces,
   getPlacesByCountry,
+  getPlacesByAuthor,
   getPlaceById,
   createPlace,
   updatePlaceById,
