@@ -2,7 +2,7 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../../database/models/user");
-const { userLogin, userSignUp } = require("./userControllers");
+const { userLogin, userSignUp, getUserById } = require("./userControllers");
 
 jest.mock("../../database/models/user");
 jest.mock("bcrypt");
@@ -14,6 +14,19 @@ const mockResponse = () => {
   res.json = jest.fn().mockReturnValue(res);
   return res;
 };
+
+const usersArray = [
+  {
+    id: "6185993022dd92661d3cfca6",
+    username: "user1",
+    password: "user1",
+  },
+  {
+    id: "6185993022dd92661d3cf5yd",
+    username: "user2",
+    password: "user2",
+  },
+];
 
 describe("Given a userLogin function", () => {
   describe("When it receives a request with an incorrect username", () => {
@@ -132,6 +145,54 @@ describe("Given a userSignUp function", () => {
 
       expect(res.json).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
+    });
+  });
+});
+
+describe("Given a getUserById function", () => {
+  describe("When it receives a request with an id, a response and the database contains a user", () => {
+    test("Then it should return a user with the method json", async () => {
+      const res = mockResponse();
+      const users = usersArray;
+      const idSearched = "6185993022dd92661d3cfca6";
+      const userSearched = users.find((user) => user.id === idSearched);
+      const req = { params: { id: idSearched } };
+      User.findById = jest.fn().mockResolvedValue(userSearched);
+
+      await getUserById(req, res, null);
+
+      expect(User.findById).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(userSearched);
+    });
+  });
+  describe("When it receives a request with an id that doesn't match any user in the database", () => {
+    test("Then it should call next with an error message 'User not found' and a status code 404", async () => {
+      const res = mockResponse();
+      const idSearched = "6185993022dd92661d3cfg";
+      const req = { params: { id: idSearched } };
+      const error = new Error("User not found");
+      error.code = 404;
+      const next = jest.fn();
+      User.findById = jest.fn().mockResolvedValue();
+
+      await getUserById(req, res, next);
+
+      expect(User.findById).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+  describe("When it receives a request with an id but the db connection is not working", () => {
+    test("Then it should call next with an error message 'Bad request' and a status code 400", async () => {
+      const idSearched = "6185993022dd92661d3cfg";
+      const req = { params: { id: idSearched } };
+      const error = new Error("Bad request");
+      error.code = 400;
+      const next = jest.fn();
+      User.findById = jest.fn().mockRejectedValue(new Error());
+
+      await getUserById(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });

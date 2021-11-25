@@ -51,4 +51,22 @@ const userSignUp = async (req, res, next) => {
   }
 };
 
-module.exports = { userLogin, userSignUp };
+const getUserById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const searchedUser = await User.findById(id);
+    if (searchedUser) {
+      res.json(searchedUser);
+    } else {
+      const error = new Error("User not found");
+      error.code = 404;
+      next(error);
+    }
+  } catch (error) {
+    error.code = 400;
+    error.message = "Bad request";
+    next(error);
+  }
+};
+
+module.exports = { userLogin, userSignUp, getUserById };
