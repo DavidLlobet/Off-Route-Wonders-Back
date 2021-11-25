@@ -8,6 +8,7 @@ const {
   generalErrorHandler,
 } = require("./middlewares/errors");
 const placesRoutes = require("./routes/placesRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
+app.use("/user", userRoutes);
 app.use("/places", placesRoutes);
 
 app.use(notFoundErrorHandler);
