@@ -83,7 +83,7 @@ describe("Given a userLogin function", () => {
       const req = {
         body: {
           username: "Buleano",
-          password: "Buleano",
+          password: "Wrong password",
         },
       };
       const res = {
