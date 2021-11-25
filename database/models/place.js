@@ -1,6 +1,11 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types } = require("mongoose");
 
 const placeSchema = new Schema({
+  author: {
+    type: Types.ObjectId,
+    ref: "user",
+    required: true,
+  },
   title: {
     type: String,
     required: true,

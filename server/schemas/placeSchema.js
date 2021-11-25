@@ -2,6 +2,7 @@ const { Joi } = require("express-validation");
 
 const placeValidation = {
   body: Joi.object({
+    author: Joi.object().required,
     title: Joi.string()
       .regex(/.{1,50}/)
       .required(),

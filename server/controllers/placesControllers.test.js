@@ -20,6 +20,10 @@ const mockResponse = () => {
 const placesArray = [
   {
     id: "6185993022dd92661d3cfca6",
+    author: {
+      username: "Mario",
+      password: "González",
+    },
     title: "place1",
     date: "23-11-2021",
     country: "Vietnam",
@@ -30,6 +34,10 @@ const placesArray = [
   },
   {
     id: "6185993022dd92661d3cf5yd",
+    author: {
+      username: "Mario",
+      password: "González",
+    },
     title: "place2",
     date: "23-11-2021",
     country: "Eslovaquia",
@@ -77,6 +85,36 @@ describe("Given a getAllPlaces function", () => {
     });
   });
 });
+
+// describe("Given a getPlacesByAuthor function", () => {
+//   describe("When it is called", () => {
+//     test("Then it should respond with the method json", async () => {
+//       const res = mockResponse();
+//       const places = placesArray;
+//       Place.find = jest.fn().mockResolvedValue(places);
+
+//       await getPlacesByAuthor(null, res);
+
+//       expect(res.json).toHaveBeenCalled();
+//     });
+//   });
+
+//   describe("When it is called and the database connection is not working", () => {
+//     test("Then it should invoke next with an error message 'Cannot find the places' and a status code 400", async () => {
+//       const res = mockResponse();
+//       const next = jest.fn();
+//       const error = new Error();
+//       error.code = 400;
+//       error.message = "Cannot find the places";
+
+//       Place.find = jest.fn().mockRejectedValue(new Error());
+
+//       await getPlacesByAuthor(null, res, next);
+
+//       expect(Place.find).toHaveBeenCalled();
+//     });
+//   });
+// });
 
 describe("Given a getPlaceById function", () => {
   describe("When it receives a request with an id, a response and the database contains places", () => {
