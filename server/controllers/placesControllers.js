@@ -1,8 +1,14 @@
 const Place = require("../../database/models/place");
+// eslint-disable-next-line no-unused-vars
+const Country = require("../../database/models/country");
 
 const getAllPlaces = async (req, res, next) => {
   try {
-    const places = await Place.find().populate("author", "-password -__v");
+    // const places = await Place.find().populate("country author");
+    const places = await Place.find().populate(
+      "author country",
+      "-password -__v"
+    );
     res.json(places);
   } catch (error) {
     error.code = 400;
@@ -12,14 +18,14 @@ const getAllPlaces = async (req, res, next) => {
 };
 
 const getPlacesByCountry = async (req, res, next) => {
-  const { country } = req.params;
+  const { idCountry } = req.params;
   try {
-    const searchedCountry = await Place.find({ Query: country }).populate(
-      "author",
+    const places = await Place.find({ country: idCountry }).populate(
+      "author country",
       "-password -__v"
     );
-    if (searchedCountry) {
-      res.json(searchedCountry);
+    if (places) {
+      res.json(places);
     } else {
       const error = new Error("Country not found");
       error.code = 404;
@@ -35,7 +41,7 @@ const getPlacesByCountry = async (req, res, next) => {
 const getPlacesByAuthor = async (req, res, next) => {
   try {
     const searchedPlaces = await Place.find({ author: req.userId }).populate(
-      "author",
+      "author country",
       "-password -__v"
     );
     res.json(searchedPlaces);
@@ -49,7 +55,10 @@ const getPlacesByAuthor = async (req, res, next) => {
 const getPlaceById = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const place = await Place.findById(id).populate("author", "-password -__v");
+    const place = await Place.findById(id).populate(
+      "author country",
+      "-password -__v"
+    );
     if (place) {
       res.json(place);
     } else {
