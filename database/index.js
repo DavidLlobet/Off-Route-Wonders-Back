@@ -3,7 +3,7 @@ const chalk = require("chalk");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const connectDB = () =>
+const connectDB = (databaseString) =>
   new Promise((resolve, reject) => {
     mongoose.set("debug", true);
     mongoose.set("toJSON", {
@@ -15,7 +15,7 @@ const connectDB = () =>
         delete ret._v;
       },
     });
-    mongoose.connect(process.env.MONGODB_STRING, (error) => {
+    mongoose.connect(databaseString, (error) => {
       if (error) {
         debug(chalk.red("No se ha podido iniciar la base de datos."));
         debug(chalk.red(error.message));

@@ -15,7 +15,8 @@ const placeSchema = new Schema({
     default: Date.now,
   },
   country: {
-    type: String,
+    type: Types.ObjectId,
+    ref: "country",
     required: true,
   },
   images: [

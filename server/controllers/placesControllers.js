@@ -2,7 +2,7 @@ const Place = require("../../database/models/place");
 
 const getAllPlaces = async (req, res, next) => {
   try {
-    const places = await Place.find();
+    const places = await Place.find().populate({ path: "country" });
     res.json(places);
   } catch (error) {
     error.code = 400;
@@ -31,9 +31,10 @@ const getPlacesByCountry = async (req, res, next) => {
 
 const getPlacesByAuthor = async (req, res, next) => {
   try {
-    const searchedPlaces = await Place.find({ author: req.userId }).populate({
-      path: "author",
-    });
+    const searchedPlaces = await Place.find({ author: req.userId }).populate(
+      "author",
+      "-password -__v"
+    );
     res.json(searchedPlaces);
   } catch (error) {
     error.code = 400;

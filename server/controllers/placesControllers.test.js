@@ -52,8 +52,9 @@ describe("Given a getAllPlaces function", () => {
   describe("When it is called", () => {
     test("Then it should respond with the method json", async () => {
       const res = mockResponse();
-      const places = placesArray;
-      Place.find = jest.fn().mockResolvedValue(places);
+      Place.find = jest
+        .fn()
+        .mockReturnValue({ populate: jest.fn().mockReturnValue(res.json) });
 
       await getAllPlaces(null, res);
 
@@ -62,7 +63,9 @@ describe("Given a getAllPlaces function", () => {
     test("Then it should respond with a list of places", async () => {
       const res = mockResponse();
       const places = placesArray;
-      Place.find = jest.fn().mockResolvedValue(places);
+      Place.find = jest
+        .fn()
+        .mockReturnValue({ populate: jest.fn().mockReturnValue(places) });
 
       await getAllPlaces(null, res);
 
