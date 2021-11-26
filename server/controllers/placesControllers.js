@@ -2,7 +2,7 @@ const Place = require("../../database/models/place");
 
 const getAllPlaces = async (req, res, next) => {
   try {
-    const places = await Place.find().populate({ path: "country" });
+    const places = await Place.find().populate("author", "-password -__v");
     res.json(places);
   } catch (error) {
     error.code = 400;
