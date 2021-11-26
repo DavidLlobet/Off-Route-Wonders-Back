@@ -4,7 +4,7 @@ const {
   getPlaceById,
   createPlace,
   updatePlaceById,
-  getPlacesByCountry,
+  // getPlacesByCountry,
   deletePlaceById,
 } = require("./placesControllers");
 
