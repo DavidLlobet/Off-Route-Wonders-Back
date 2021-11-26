@@ -18,17 +18,25 @@ const placeSchema = new Schema({
     type: String,
     required: true,
   },
-  images: {
-    type: [String],
-    required: true,
-  },
+  images: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   text: {
     type: String,
     required: true,
   },
-  map: {
-    type: [Number],
-    required: true,
+  coordinates: {
+    longitude: {
+      type: Number,
+      required: true,
+    },
+    latitude: {
+      type: Number,
+      required: true,
+    },
   },
   comments: {
     type: [Object],
