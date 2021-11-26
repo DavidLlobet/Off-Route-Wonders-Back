@@ -13,7 +13,7 @@ let newPlace2;
 
 beforeAll(async () => {
   await connectDB(process.env.MONGODB_STRING_TESTING);
-  server = await initializeServer(6000);
+  server = await initializeServer(5000);
   await Place.deleteMany();
 });
 
