@@ -2,7 +2,7 @@ const Place = require("../../database/models/place");
 
 const getAllPlaces = async (req, res, next) => {
   try {
-    const places = await Place.find().populate({ path: "country" });
+    const places = await Place.find().populate("author", "-password -__v");
     res.json(places);
   } catch (error) {
     error.code = 400;
@@ -14,7 +14,10 @@ const getAllPlaces = async (req, res, next) => {
 const getPlacesByCountry = async (req, res, next) => {
   const { country } = req.params;
   try {
-    const searchedCountry = await Place.find({ Query: country });
+    const searchedCountry = await Place.find({ Query: country }).populate(
+      "author",
+      "-password -__v"
+    );
     if (searchedCountry) {
       res.json(searchedCountry);
     } else {
@@ -46,7 +49,7 @@ const getPlacesByAuthor = async (req, res, next) => {
 const getPlaceById = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const place = await Place.findById(id);
+    const place = await Place.findById(id).populate("author", "-password -__v");
     if (place) {
       res.json(place);
     } else {
