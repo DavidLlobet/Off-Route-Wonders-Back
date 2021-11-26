@@ -38,6 +38,7 @@
     "express": "^4.17.1",
     "express-validation": "^3.0.8",
     "faker": "^5.5.3",
+    "firebase-admin": "^10.0.0",
     "fishery": "^2.1.0",
     "inquirer": "^8.2.0",
     "jest": "^27.3.1",
