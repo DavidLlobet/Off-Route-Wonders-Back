@@ -12,6 +12,7 @@ const {
 } = require("../controllers/placesControllers");
 const uploadFirebase = require("../middlewares/firebase");
 const upload = require("../middlewares/uploadLocal");
+const verifyPlaceCreator = require("../middlewares/verifyPlaceCreator");
 
 const router = express.Router();
 
@@ -27,6 +28,6 @@ router.post(
   createPlace
 );
 router.put("/update/:id", auth, updatePlaceById);
-router.delete("/delete/:id", auth, deletePlaceById);
+router.delete("/delete/:id", auth, verifyPlaceCreator, deletePlaceById);
 
 module.exports = router;
