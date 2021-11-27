@@ -285,7 +285,11 @@ describe("Given an updatePlace function", () => {
         comments: "",
       };
       const req = { body: place, params: { id: place.id } };
-      Place.findByIdAndUpdate = jest.fn().mockResolvedValue(place);
+      Place.findByIdAndUpdate = jest.fn().mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          populate: jest.fn().mockResolvedValue(place),
+        }),
+      });
 
       await updatePlaceById(req, res, null);
 
@@ -300,7 +304,11 @@ describe("Given an updatePlace function", () => {
       const error = new Error("Place to modify not found");
       error.code = 404;
       const next = jest.fn();
-      Place.findByIdAndUpdate = jest.fn().mockResolvedValue();
+      Place.findByIdAndUpdate = jest.fn().mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          populate: jest.fn().mockResolvedValue(),
+        }),
+      });
 
       await updatePlaceById(req, res, next);
 
