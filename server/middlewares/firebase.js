@@ -5,17 +5,20 @@ admin.initializeApp({
   storageBucket: "off-route-wonders.appspot.com",
 });
 
-const uploadFirebase = (req, res, next) => {
+const uploadFirebase = async (req, res, next) => {
   const bucket = admin.storage().bucket();
   try {
     req.body.images = [];
-    req.files.map(async (image) => {
+
+    const getImages = req.files.map(async (image) => {
       await bucket.upload(image.path);
       await bucket.file(image.filename).makePublic();
       const fileURL = bucket.file(image.filename).publicUrl();
-      req.body.images.push(fileURL);
-      next();
+      return fileURL;
     });
+    const images = await Promise.all(getImages);
+    req.body.images = images;
+    next();
   } catch (error) {
     error.code = 400;
     error.message = "Cannot upload the images";
