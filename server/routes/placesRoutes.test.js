@@ -132,7 +132,7 @@ describe("Given a /places/update/:id route", () => {
           longitude: 2154865,
           latitude: 2154865,
         },
-        comments: "",
+        comments: [],
       };
       const response = await request
         .put(`/places/update/${newPlace2.id}`)
@@ -167,7 +167,7 @@ describe("Given a /places/update/:id route", () => {
           longitude: 2154865,
           latitude: 2154865,
         },
-        comments: "",
+        comments: [],
       };
       const response = await request
         .put("/places/update/618d661e120687524fd0ab11")
