@@ -30,22 +30,26 @@ beforeEach(async () => {
     author: "619fd3c298bdb970bc0c248b",
     title: "place1",
     date: 23 - 11 - 2021,
-    country: "Vietnam",
+    country: "61a104bcec1d9f99c7672ca4",
     images: ["image1", "image2"],
     text: "Vietnam está to flama",
-    map: [2154805],
-    comments: "",
+    coordinates: {
+      longitude: 2154865,
+      latitude: 2154865,
+    },
   });
   newPlace2 = await Place.create({
     id: "6185993022dd92661d3cf5yd",
     author: "619fd3c298bdb970bc0c248b",
     title: "place2",
     date: 23 - 11 - 2021,
-    country: "Eslovaquia",
+    country: "61a104f7ec1d9f99c7672ca5",
     images: ["image1", "image2"],
     text: "Eslovaquia mola cantidubi",
-    map: 2154865,
-    comments: "",
+    coordinates: {
+      longitude: 2154865,
+      latitude: 2154865,
+    },
   });
 });
 
@@ -67,9 +71,11 @@ describe("Given a /places route", () => {
 describe("Given a /places/country/:country route", () => {
   describe("When it receives a get request", () => {
     test("Then it should respond with a list of places by country", async () => {
-      const response = await request.get("/places/country/Vietnam").expect(200);
+      const response = await request
+        .get("/places/country/61a104bcec1d9f99c7672ca4")
+        .expect(200);
 
-      expect(response.body[0]).toHaveProperty("title", newPlace1.title);
+      expect(response.body).toHaveProperty("title", newPlace1.title);
     });
   });
 });
@@ -88,15 +94,17 @@ describe("Given a /places/create route", () => {
   describe("When it receives a post request with a new place", () => {
     test("Then it should respond with the created place", async () => {
       const newPlace = {
-        id: "6185993022dd92661d3cf5yj",
+        id: "6185993022dd92661d3cfca6",
         author: "619fd3c298bdb970bc0c248b",
         title: "place3",
-        date: 23 - 11 - 2021,
-        country: "Canadá",
+        date: 27 - 11 - 2021,
+        country: "61a104bcec1d9f99c7672ca4",
         images: ["image1", "image2"],
-        text: "En Canadá hace frío",
-        map: 2155565,
-        comments: "",
+        text: "Vietnam está to flama",
+        coordinates: {
+          longitude: 2154865,
+          latitude: 2154865,
+        },
       };
       const response = await request
         .post("/places/create")
@@ -114,12 +122,16 @@ describe("Given a /places/update/:id route", () => {
     test("Then it should respond with a modified place", async () => {
       const modifiedPlace = {
         id: "6185993022dd92661d3cf5yd",
+        author: "619fd3c298bdb970bc0c248b",
         title: "place2",
         date: 24 - 11 - 2021,
-        country: "Eslovaquia",
+        country: "61a104f7ec1d9f99c7672ca5",
         images: ["image1", "image2", "image3"],
         text: "Eslovaquia mola bastante",
-        map: 2154865,
+        coordinates: {
+          longitude: 2154865,
+          latitude: 2154865,
+        },
         comments: "",
       };
       const response = await request
@@ -145,12 +157,16 @@ describe("Given a /places/update/:id route", () => {
     test("Then it should respond with an error", async () => {
       const modifiedPlace = {
         id: "6185993022dd92661d3cf5yd",
+        author: "619fd3c298bdb970bc0c248b",
         title: "place2",
         date: 24 - 11 - 2021,
-        country: "Eslovaquia",
+        country: "61a104f7ec1d9f99c7672ca5",
         images: ["image1", "image2", "image3"],
         text: "Eslovaquia mola bastante",
-        map: 2154865,
+        coordinates: {
+          longitude: 2154865,
+          latitude: 2154865,
+        },
         comments: "",
       };
       const response = await request
