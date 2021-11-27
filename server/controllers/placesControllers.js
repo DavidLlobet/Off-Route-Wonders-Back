@@ -1,6 +1,8 @@
 const Place = require("../../database/models/place");
 // eslint-disable-next-line no-unused-vars
 const Country = require("../../database/models/country");
+// eslint-disable-next-line no-unused-vars
+const Comment = require("../../database/models/comment");
 
 const getAllPlaces = async (req, res, next) => {
   try {
@@ -56,7 +58,7 @@ const getPlaceById = async (req, res, next) => {
   const { id } = req.params;
   try {
     const place = await Place.findById(id).populate(
-      "author country",
+      "author country comment",
       "-password -__v"
     );
     if (place) {
@@ -89,7 +91,13 @@ const updatePlaceById = async (req, res, next) => {
   try {
     const placeUpdated = await Place.findByIdAndUpdate(id, req.body, {
       new: true,
-    });
+    })
+      .populate("author country", "-password -__v")
+      .populate({
+        path: "comments",
+        populate: [{ path: "author", select: "username" }],
+      });
+
     if (placeUpdated) {
       res.json(placeUpdated);
     } else {

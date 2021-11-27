@@ -40,9 +40,9 @@ const placeSchema = new Schema({
     },
   },
   comments: {
-    type: Types.ObjectId,
-    ref: "comments",
-    required: false,
+    type: [Types.ObjectId],
+    ref: "comment",
+    default: [],
   },
 });
 
