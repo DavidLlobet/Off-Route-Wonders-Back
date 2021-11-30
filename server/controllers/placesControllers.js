@@ -78,7 +78,7 @@ const getPlaceById = async (req, res, next) => {
 const createPlace = async (req, res, next) => {
   try {
     const placeCreated = await Place.create(req.body);
-    const user = User.findById(req.userId);
+    const user = await User.findById(req.userId);
     user.places.push(placeCreated.id);
     user.save();
     res.json(placeCreated);
