@@ -3,10 +3,10 @@ const Place = require("../../database/models/place");
 const Country = require("../../database/models/country");
 // eslint-disable-next-line no-unused-vars
 const Comment = require("../../database/models/comment");
+const User = require("../../database/models/user");
 
 const getAllPlaces = async (req, res, next) => {
   try {
-    // const places = await Place.find().populate("country author");
     const places = await Place.find().populate(
       "author country",
       "-password -__v"
@@ -78,6 +78,9 @@ const getPlaceById = async (req, res, next) => {
 const createPlace = async (req, res, next) => {
   try {
     const placeCreated = await Place.create(req.body);
+    const user = User.findById(req.userId);
+    user.places.push(placeCreated.id);
+    user.save();
     res.json(placeCreated);
   } catch (error) {
     error.code = 400;

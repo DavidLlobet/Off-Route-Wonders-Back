@@ -54,7 +54,7 @@ const userSignUp = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const searchedUser = await User.findById(id);
+    const searchedUser = await User.findById(id).populate("places");
     if (searchedUser) {
       res.json(searchedUser);
     } else {
