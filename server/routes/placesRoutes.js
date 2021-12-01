@@ -17,7 +17,7 @@ const verifyPlaceCreator = require("../middlewares/verifyPlaceCreator");
 const router = express.Router();
 
 router.get("/", getAllPlaces);
-router.get("/country/:id", getPlacesByCountry);
+router.get("/country/:idCountry", getPlacesByCountry);
 router.get("/my-profile", auth, getPlacesByAuthor);
 router.get("/:id", getPlaceById);
 router.post(
