@@ -1,4 +1,6 @@
 const Place = require("../../database/models/place");
+const User = require("../../database/models/user");
+
 const {
   getAllPlaces,
   getPlaceById,
@@ -244,8 +246,15 @@ describe("Given a createPlace function", () => {
         map: 2154410,
         comments: "",
       };
-      const req = { body: place };
+      const currentUser = {
+        username: "Mario",
+        password: "Mario",
+        places: [],
+      };
+      const req = { body: place, userId: "" };
       Place.create = jest.fn().mockResolvedValue(place);
+      User.findById = jest.fn().mockResolvedValue(currentUser);
+      currentUser.save = jest.fn();
 
       await createPlace(req, res, null);
 
