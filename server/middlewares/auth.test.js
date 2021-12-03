@@ -50,7 +50,7 @@ describe("Given an auth middleware", () => {
 
       const res = {};
 
-      jwt.verify = jest.fn().mockRejectedValue(error);
+      jwt.verify = jest.fn().mockReturnValue(error);
       await auth(req, res, next);
 
       expect(next).toHaveBeenCalled();
