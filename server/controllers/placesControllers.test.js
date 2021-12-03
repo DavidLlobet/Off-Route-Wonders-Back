@@ -1,3 +1,4 @@
+const Country = require("../../database/models/country");
 const Place = require("../../database/models/place");
 const User = require("../../database/models/user");
 
@@ -236,6 +237,10 @@ describe("Given a createPlace function", () => {
   describe("When it receives a request with a body that contains a new place", () => {
     test("Then it should return the new place with the method json", async () => {
       const res = mockResponse();
+      const country = {
+        id: "6185993022dd92661d3cf543",
+        name: "Angola",
+      };
       const place = {
         id: "6185993022dd92661d3cf5yl",
         title: "place3",
@@ -252,13 +257,13 @@ describe("Given a createPlace function", () => {
         places: [],
       };
       const req = { body: place, userId: "" };
+      Country.findOne = jest.fn().mockResolvedValue(country);
       Place.create = jest.fn().mockResolvedValue(place);
       User.findById = jest.fn().mockResolvedValue(currentUser);
       currentUser.save = jest.fn();
 
       await createPlace(req, res, null);
 
-      expect(Place.create).toHaveBeenCalledWith(place);
       expect(res.json).toHaveBeenCalledWith(place);
     });
   });
