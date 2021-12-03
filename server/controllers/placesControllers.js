@@ -77,9 +77,17 @@ const getPlaceById = async (req, res, next) => {
 
 const createPlace = async (req, res, next) => {
   try {
-    const placeCreated = await Place.create(req.body);
+    const country = await Country.findOne({ name: req.body.country });
+
     const user = await User.findById(req.userId);
+
+    const placeCreated = await Place.create({
+      ...req.body,
+      country: country.id,
+      author: user.id,
+    });
     user.places.push(placeCreated.id);
+
     user.save();
     res.json(placeCreated);
   } catch (error) {
