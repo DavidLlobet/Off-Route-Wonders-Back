@@ -1,3 +1,4 @@
+const Country = require("../../database/models/country");
 const Place = require("../../database/models/place");
 const User = require("../../database/models/user");
 
@@ -12,6 +13,8 @@ const {
 } = require("./placesControllers");
 
 jest.mock("../../database/models/place");
+jest.mock("../../database/models/user");
+jest.mock("../../database/models/country");
 
 const mockResponse = () => {
   const res = {};
@@ -86,7 +89,7 @@ describe("Given a getAllPlaces function", () => {
       error.code = 400;
       error.message = "Cannot find the places";
 
-      Place.find = jest.fn().mockRejectedValue(new Error());
+      Place.find = jest.fn();
 
       await getAllPlaces(null, res, next);
 
@@ -121,7 +124,7 @@ describe("Given a getPlacesByAuthor function", () => {
       error.code = 400;
       error.message = "Cannot find the places";
 
-      Place.find = jest.fn().mockRejectedValue(new Error());
+      Place.find = jest.fn();
 
       await getPlacesByAuthor(null, res, next);
 
@@ -171,7 +174,7 @@ describe("Given a getPlaceById function", () => {
       const error = new Error("Cannot find the place");
       error.code = 400;
       const next = jest.fn();
-      Place.findById = jest.fn().mockRejectedValue(new Error());
+      Place.findById = jest.fn();
 
       await getPlaceById(req, null, next);
 
@@ -223,7 +226,7 @@ describe("Given a getPlacesByCountry function", () => {
       const error = new Error("Cannot find the country");
       error.code = 400;
       const next = jest.fn();
-      Place.find = jest.fn().mockRejectedValue(new Error());
+      Place.find = jest.fn();
 
       await getPlacesByCountry(req, null, next);
 
@@ -236,6 +239,10 @@ describe("Given a createPlace function", () => {
   describe("When it receives a request with a body that contains a new place", () => {
     test("Then it should return the new place with the method json", async () => {
       const res = mockResponse();
+      const country = {
+        id: "6185993022dd92661d3cf543",
+        name: "Angola",
+      };
       const place = {
         id: "6185993022dd92661d3cf5yl",
         title: "place3",
@@ -252,13 +259,14 @@ describe("Given a createPlace function", () => {
         places: [],
       };
       const req = { body: place, userId: "" };
+      Country.findOne = jest.fn().mockResolvedValue(country);
       Place.create = jest.fn().mockResolvedValue(place);
       User.findById = jest.fn().mockResolvedValue(currentUser);
       currentUser.save = jest.fn();
+      currentUser.places.push = jest.fn();
 
       await createPlace(req, res, null);
 
-      expect(Place.create).toHaveBeenCalledWith(place);
       expect(res.json).toHaveBeenCalledWith(place);
     });
   });
@@ -270,7 +278,7 @@ describe("Given a createPlace function", () => {
       error.message = "Cannot create the place";
 
       const next = jest.fn();
-      Place.create = jest.fn().mockRejectedValue(new Error());
+      Place.create = jest.fn();
 
       await createPlace(req, null, next);
 
@@ -332,7 +340,7 @@ describe("Given an updatePlace function", () => {
       const error = new Error("Cannot update the place");
       error.code = 400;
       const next = jest.fn();
-      Place.findByIdAndUpdate = jest.fn().mockRejectedValue(new Error());
+      Place.findByIdAndUpdate = jest.fn();
 
       await updatePlaceById(req, null, next);
 
@@ -377,10 +385,10 @@ describe("Given a deletePlaceById function", () => {
     test("Then it should call next with an error message 'Cannot delete the place' and a status code 400", async () => {
       const idSearched = "6185993022dd92661d3cfg";
       const req = { params: { id: idSearched } };
-      const error = new Error("Cannot delete the place");
+      const error = new Error("Place to delete not found");
       error.code = 400;
       const next = jest.fn();
-      Place.findByIdAndDelete = jest.fn().mockRejectedValue(new Error());
+      Place.findByIdAndDelete = jest.fn();
 
       await deletePlaceById(req, null, next);
 
