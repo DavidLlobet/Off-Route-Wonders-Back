@@ -14,6 +14,10 @@ const userSchema = new Schema({
     ref: "place",
     default: [],
   },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const User = model("user", userSchema, "users");
