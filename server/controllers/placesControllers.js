@@ -58,7 +58,7 @@ const getPlaceById = async (req, res, next) => {
   const { id } = req.params;
   try {
     const place = await Place.findById(id).populate(
-      "author country comment",
+      "author country comments",
       "-password -__v"
     );
     if (place) {
@@ -69,6 +69,7 @@ const getPlaceById = async (req, res, next) => {
       next(error);
     }
   } catch (error) {
+    console.log(error);
     error.code = 400;
     error.message = "Cannot find the place";
     next(error);
@@ -91,6 +92,7 @@ const createPlace = async (req, res, next) => {
     user.save();
     res.json(placeCreated);
   } catch (error) {
+    console.log(error);
     error.code = 400;
     error.message = "Cannot create the place";
     next(error);
