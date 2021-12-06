@@ -19,7 +19,6 @@ const uploadFirebase = async (req, res, next) => {
     req.body.images = images;
     next();
   } catch (error) {
-    console.log(error);
     error.code = 400;
     error.message = "Cannot upload the images";
     next(error);

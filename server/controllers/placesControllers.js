@@ -69,7 +69,6 @@ const getPlaceById = async (req, res, next) => {
       next(error);
     }
   } catch (error) {
-    console.log(error);
     error.code = 400;
     error.message = "Cannot find the place";
     next(error);
@@ -92,19 +91,28 @@ const createPlace = async (req, res, next) => {
     user.save();
     res.json(placeCreated);
   } catch (error) {
-    console.log(error);
     error.code = 400;
     error.message = "Cannot create the place";
     next(error);
   }
 };
 
-const updatePlaceById = async (req, res, next) => {
-  const { id } = req.params;
+const updatePlaceById = async ({ body, params }, res, next) => {
+  const { id } = params;
+  const { country } = body;
   try {
-    const placeUpdated = await Place.findByIdAndUpdate(id, req.body, {
-      new: true,
-    })
+    const getCountry = await Country.findOne({ name: country });
+    const placeUpdated = await Place.findByIdAndUpdate(
+      id,
+      {
+        ...body,
+        country: getCountry,
+      },
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    )
       .populate("author country", "-password -__v")
       .populate({
         path: "comments",

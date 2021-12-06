@@ -291,6 +291,10 @@ describe("Given an updatePlace function", () => {
   describe("When it receives a request with an id and a body containing a modified existing place", () => {
     test("Then it should return the modified place with the method json", async () => {
       const res = mockResponse();
+      const country = {
+        id: "6185993022dd92661d3cf543",
+        name: "Angola",
+      };
       const place = {
         id: "6185993022dd92661d3cf5yd",
         title: "place2",
@@ -302,6 +306,8 @@ describe("Given an updatePlace function", () => {
         comments: "",
       };
       const req = { body: place, params: { id: place.id } };
+      Country.findOne = jest.fn().mockResolvedValue(country);
+
       Place.findByIdAndUpdate = jest.fn().mockReturnValue({
         populate: jest.fn().mockReturnValue({
           populate: jest.fn().mockResolvedValue(place),
@@ -316,11 +322,23 @@ describe("Given an updatePlace function", () => {
   describe("When it receives a request with an id that doesn't match any place in the database", () => {
     test("Then it should call next with an error message 'Place to modify not found' and a status code 404", async () => {
       const res = mockResponse();
+      const place = {
+        id: "6185993022dd92661d3cf5yd",
+        title: "place2",
+        date: "23-11-2021",
+        country: "Eslovaquia",
+        images: ["image1", "image2", "image3"],
+        text: "Eslovaquia mola mogollón",
+        map: 2154456,
+        comments: "",
+      };
       const idSearched = "6185993022dd92661d3cfg";
-      const req = { params: { id: idSearched } };
+      const req = { body: place, params: { idSearched } };
       const error = new Error("Place to modify not found");
       error.code = 404;
       const next = jest.fn();
+      Country.findOne = jest.fn();
+
       Place.findByIdAndUpdate = jest.fn().mockReturnValue({
         populate: jest.fn().mockReturnValue({
           populate: jest.fn().mockResolvedValue(),
@@ -336,10 +354,22 @@ describe("Given an updatePlace function", () => {
   describe("When it receives a request with a body containing an id but the db connection is not working", () => {
     test("Then it should call next with an error message 'Cannot update the place' and a status code 400", async () => {
       const idSearched = "6185993022dd92661d3cfg";
-      const req = { params: { id: idSearched } };
+      const place = {
+        id: "6185993022dd92661d3cf5yd",
+        title: "place2",
+        date: "23-11-2021",
+        country: "Eslovaquia",
+        images: ["image1", "image2", "image3"],
+        text: "Eslovaquia mola mogollón",
+        map: 2154456,
+        comments: "",
+      };
+      const req = { body: place, params: { idSearched } };
       const error = new Error("Cannot update the place");
       error.code = 400;
       const next = jest.fn();
+      Country.findOne = jest.fn();
+
       Place.findByIdAndUpdate = jest.fn();
 
       await updatePlaceById(req, null, next);
