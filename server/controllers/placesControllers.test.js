@@ -309,9 +309,7 @@ describe("Given an updatePlace function", () => {
       Country.findOne = jest.fn().mockResolvedValue(country);
 
       Place.findByIdAndUpdate = jest.fn().mockReturnValue({
-        populate: jest.fn().mockReturnValue({
-          populate: jest.fn().mockResolvedValue(place),
-        }),
+        populate: jest.fn().mockResolvedValue(place),
       });
 
       await updatePlaceById(req, res, null);
@@ -340,9 +338,7 @@ describe("Given an updatePlace function", () => {
       Country.findOne = jest.fn();
 
       Place.findByIdAndUpdate = jest.fn().mockReturnValue({
-        populate: jest.fn().mockReturnValue({
-          populate: jest.fn().mockResolvedValue(),
-        }),
+        populate: jest.fn().mockResolvedValue(),
       });
 
       await updatePlaceById(req, res, next);
