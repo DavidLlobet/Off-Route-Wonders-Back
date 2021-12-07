@@ -39,11 +39,12 @@ const placeSchema = new Schema({
       required: true,
     },
   },
-  comments: {
-    type: [Types.ObjectId],
-    ref: "comment",
-    default: [],
-  },
+  comments: [
+    {
+      type: String,
+      required: false,
+    },
+  ],
 });
 
 const Place = model("place", placeSchema, "places");
